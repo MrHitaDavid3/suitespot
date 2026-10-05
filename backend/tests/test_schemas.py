@@ -198,3 +198,45 @@ def test_bad_query_params_return_422():
         },
     )
     assert res.status_code == 422
+
+
+def error_locs(exc_info) -> list[tuple]:
+    return [e["loc"] for e in exc_info.value.errors()]
+
+
+@pytest.mark.parametrize(
+    "overrides,field",
+    [
+        ({"checkIn": days_from_today(-1)}, "checkIn"),
+        ({"checkIn": days_from_today(2), "checkOut": days_from_today(2)}, "checkOut"),
+        ({"checkIn": days_from_today(1), "checkOut": days_from_today(32)}, "checkOut"),
+        ({"minPrice": 200, "maxPrice": 100}, "maxPrice"),
+    ],
+)
+def test_search_errors_name_the_field(overrides, field):
+    with pytest.raises(ValidationError) as exc_info:
+        search(**overrides)
+    assert error_locs(exc_info) == [(field,)]
+
+
+def test_past_check_in_does_not_also_flag_check_out():
+    with pytest.raises(ValidationError) as exc_info:
+        search(checkIn=days_from_today(-5), checkOut=days_from_today(-6))
+    assert error_locs(exc_info) == [("checkIn",)]
+
+
+def test_422_loc_names_the_field_through_fastapi():
+    client = make_client()
+    res = client.get(
+        "/search",
+        params={
+            "destination": "San Jose",
+            "checkIn": days_from_today(3).isoformat(),
+            "checkOut": days_from_today(1).isoformat(),
+        },
+    )
+    assert res.status_code == 422
+    detail = res.json()["detail"]
+    # FastAPI 0.115 reports query-model errors by field name, not by alias.
+    assert [e["loc"] for e in detail] == [["query", "check_out"]]
+    assert "after check-in" in detail[0]["msg"]
