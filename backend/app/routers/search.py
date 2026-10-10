@@ -1,0 +1,45 @@
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Query
+from pydantic import Field
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.schemas.search import HotelSearchParams
+from app.services.availability import find_available_hotels
+
+router = APIRouter(prefix="/search", tags=["search"])
+
+
+class SearchQuery(HotelSearchParams):
+    """HotelSearchParams (8.4.1) plus pagination for the results list (1.1.3).
+
+    FastAPI can't mix a query-parameter model with separate query params, so
+    the paging fields live on a subclass instead of editing the shared schema.
+    """
+
+    limit: int = Field(default=20, ge=1, le=50)
+    offset: int = Field(default=0, ge=0)
+
+
+@router.get("")
+def search_hotels(
+    params: Annotated[SearchQuery, Query()],
+    db: Session = Depends(get_db),
+):
+    """Hotels with a free room for the destination, dates and guest count.
+
+    Date and guest validation lives in HotelSearchParams and returns 422.
+    An empty `results` list is a normal answer; the UI shows the 1.1.4
+    empty state.
+    """
+    results = find_available_hotels(
+        db,
+        destination=params.destination,
+        check_in=params.check_in,
+        check_out=params.check_out,
+        guests=params.guests,
+        limit=params.limit,
+        offset=params.offset,
+    )
+    return {"results": results, "limit": params.limit, "offset": params.offset}
