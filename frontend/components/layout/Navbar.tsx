@@ -1,40 +1,55 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+'use client';
 
-export function Navbar() {
+import React from 'react';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+
+export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-stone-200/80 bg-stone-50/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-1 sm:gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-1 shrink-0">
-          <span className="font-semibold text-sm sm:text-base md:text-lg text-stone-900 tracking-tight">
+    <nav className="bg-primary text-primary-foreground px-8 py-4 flex items-center justify-between border-b border-line">
+      {/* Brand Logo */}
+      <Link href="/" className="flex items-center space-x-2 group">
+        <div className="bg-accent text-white p-2 rounded-control flex items-center justify-center font-bold text-xl h-10 w-10">
+          S
+        </div>
+        <div className="flex flex-col leading-tight">
+          <span className="text-xl font-bold tracking-tight text-white">
             LikeHome
           </span>
-          <span className="hidden md:inline text-xs text-stone-500 font-normal">
+          <span className="text-[10px] text-muted tracking-wide font-medium uppercase">
             by SuiteSpot
           </span>
-        </Link>
-
-        {/* Nav Links */}
-        <nav className="flex items-center space-x-3 sm:space-x-6 text-xs sm:text-sm font-medium text-stone-600">
-          <Link href="/" className="hover:text-stone-900 transition-colors">Explore</Link>
-          <Link href="/bookings" className="hover:text-stone-900 transition-colors whitespace-nowrap">My Bookings</Link>
-        </nav>
-
-        {/* Auth Buttons */}
-        <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
-          <Link href="/login">
-            <span className="text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 px-1 py-1 whitespace-nowrap">
-              Sign In
-            </span>
-          </Link>
-          <Link href="/register">
-            <Button size="sm" className="bg-stone-900 text-stone-50 hover:bg-stone-800 text-xs sm:text-sm px-2.5 sm:px-3 h-8 sm:h-9 whitespace-nowrap">
-              Get Started
-            </Button>
-          </Link>
         </div>
+      </Link>
+
+      {/* Navigation Links */}
+      <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <Link href="/hotels" className="hover:text-muted transition-colors">
+          Our hotels
+        </Link>
+        <Link href="/destinations" className="hover:text-muted transition-colors">
+          Destinations
+        </Link>
+        <Link href="/offers" className="hover:text-muted transition-colors">
+          Offers
+        </Link>
+        <Link href="/suite-life" className="hover:text-muted transition-colors">
+          The Suite life
+        </Link>
       </div>
-    </header>
+
+      {/* Auth & Primary Action */}
+      <div className="flex items-center space-x-6">
+        <Link href="/login" className="text-sm font-semibold hover:text-muted transition-colors">
+          Sign in
+        </Link>
+        <Link 
+          href="/search" 
+          className="bg-accent hover:bg-accent-hover text-white px-5 py-2.5 rounded-control text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
+        >
+          Find your stay <ArrowUpRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </nav>
   );
 }
