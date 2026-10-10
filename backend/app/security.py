@@ -36,7 +36,12 @@ def issue_tokens(user_id: str) -> dict[str, str]:
 def decode_token(token: str, expected_type: str) -> dict:
     """Return the token payload, or raise 401 if it is expired, forged or the wrong type."""
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[ALGORITHM],
+            options={"require": ["exp", "sub"]},
+        )
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Session expired. Please log in again.")
     except jwt.InvalidTokenError:

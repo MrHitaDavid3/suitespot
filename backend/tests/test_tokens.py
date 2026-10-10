@@ -69,3 +69,21 @@ def test_refresh_rejects_deactivated_user(client, db_session, user):
     db_session.commit()
     r = client.post("/auth/refresh", json={"refresh_token": issue_tokens(user.id)["refresh_token"]})
     assert r.status_code == 401
+
+
+def test_signed_token_missing_sub_or_exp_is_401():
+    from app.config import settings
+
+    no_sub = jwt.encode({"type": "refresh", "exp": 9999999999}, settings.SECRET_KEY, algorithm="HS256")
+    no_exp = jwt.encode({"sub": "abc", "type": "refresh"}, settings.SECRET_KEY, algorithm="HS256")
+    for token in (no_sub, no_exp):
+        with pytest.raises(HTTPException) as e:
+            decode_token(token, "refresh")
+        assert e.value.status_code == 401
+
+
+def test_refresh_endpoint_signed_token_without_sub_is_401(client):
+    from app.config import settings
+
+    token = jwt.encode({"type": "refresh", "exp": 9999999999}, settings.SECRET_KEY, algorithm="HS256")
+    assert client.post("/auth/refresh", json={"refresh_token": token}).status_code == 401
