@@ -318,7 +318,7 @@ export default function Home() {
 
           <div className="space-y-6 lg:text-right max-w-md">
             <p className="text-lg lg:text-xl font-medium leading-relaxed">
-              A room you'll love. A place you'll remember. Let's find yours.
+              A room you&apos;ll love. A place you&apos;ll remember. Let&apos;s find yours.
             </p>
             <button className="inline-flex items-center gap-3 bg-ink hover:bg-primary-hover text-white font-bold text-sm px-8 py-4 rounded-control transition-all shadow-md">
               Find your perfect stay <ArrowUpRight className="w-4 h-4" />
