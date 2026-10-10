@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { 
@@ -14,9 +15,7 @@ import {
   Users, 
   ChevronRight, 
   CheckCircle2, 
-  ArrowUpRight,
-  Heart,
-  Share2
+  ArrowUpRight
 } from 'lucide-react';
 
 const HOTELS_DATA: Record<string, {
@@ -47,7 +46,7 @@ const HOTELS_DATA: Record<string, {
     rating: '4.9',
     reviewsCount: 128,
     description:
-      'Perched along the Mediterranean coastline, Casa Sol combines relaxed island architecture with modern luxury. Enjoy private terrace sea views, locally sourced daily breakfasts, and seamless access to Mallorca&apos;s quietest coves.',
+      "Perched along the Mediterranean coastline, Casa Sol combines relaxed island architecture with modern luxury. Enjoy private terrace sea views, locally sourced daily breakfasts, and seamless access to Mallorca's quietest coves.",
     price: 189,
     images: [
       'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QkXGXfAwhzFSwjYRyzUwsCkd2Z3ccrtRNTTePrE44Cewcrzo_64983KqKSRj4YZBBOLtpv3xbAN2aIoCxvQsubiA7dzNGloJp1w5y1xDo5kOsGgAUJ517VVM3wUWqkrhqg_0wR=s680-w680-h510-rw',
@@ -131,20 +130,11 @@ export default function HotelDetailPage() {
       {/* Breadcrumb Bar */}
       <div className="max-w-[1600px] mx-auto px-8 lg:px-16 pt-6 pb-4 flex items-center justify-between text-xs font-bold">
         <div className="flex items-center gap-2 text-muted">
-          <a href="/" className="hover:text-ink transition-colors">Home</a>
+          <Link href="/" className="hover:text-ink transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <a href="/hotels" className="hover:text-ink transition-colors">Hotels</a>
+          <Link href="/hotels" className="hover:text-ink transition-colors">Hotels</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-ink uppercase tracking-wider">{hotel.name}</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-1.5 hover:text-accent transition-colors">
-            <Share2 className="w-4 h-4" /> Share
-          </button>
-          <button className="flex items-center gap-1.5 hover:text-accent transition-colors">
-            <Heart className="w-4 h-4" /> Save
-          </button>
         </div>
       </div>
 
@@ -186,17 +176,17 @@ export default function HotelDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-8 aspect-[16/10] rounded-card overflow-hidden shadow-sm">
             <img 
-                src={hotel.images[0]} 
-             alt={hotel.name}
-                className="w-full h-full object-cover"
-           />
+               src={hotel.images[0]} 
+               alt={hotel.name}
+               className="w-full h-full object-cover"
+            />
           </div>
           <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-4">
             {hotel.images.slice(1, 3).map((img, idx) => (
              <div key={idx} className="aspect-[16/10] lg:aspect-auto lg:h-[calc(50%-0.5rem)] rounded-card overflow-hidden shadow-sm">
                <img 
                     src={img} 
-                   alt={`${hotel.name} detail ${idx + 1}`}
+                    alt={`${hotel.name} detail ${idx + 1}`}
                     className="w-full h-full object-cover"
                  />
                </div>
