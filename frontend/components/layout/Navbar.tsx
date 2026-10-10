@@ -1,55 +1,45 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { User } from 'lucide-react';
 
 export default function Navbar() {
   return (
-    <nav className="bg-primary text-primary-foreground px-8 py-4 flex items-center justify-between border-b border-line">
-      {/* Brand Logo */}
-      <Link href="/" className="flex items-center space-x-2 group">
-        <div className="bg-accent text-white p-2 rounded-control flex items-center justify-center font-bold text-xl h-10 w-10">
+    <header className="w-full bg-ink text-white py-4 px-6 lg:px-16 flex items-center justify-between">
+      {/* Logo & Brand */}
+      <Link href="/" className="flex items-center gap-3">
+        <div className="bg-accent text-white font-black px-2.5 py-1.5 rounded text-sm">
           S
         </div>
-        <div className="flex flex-col leading-tight">
-          <span className="text-xl font-bold tracking-tight text-white">
+        <div className="flex flex-col">
+          <span className="font-black text-base sm:text-lg tracking-tight leading-none">
             LikeHome
           </span>
-          <span className="text-[10px] text-muted tracking-wide font-medium uppercase">
-            by SuiteSpot
+          <span className="text-[9px] sm:text-[10px] text-muted tracking-widest uppercase">
+            BY SUITESPOT
           </span>
         </div>
       </Link>
 
-      {/* Navigation Links */}
-      <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
-        <Link href="/hotels" className="hover:text-muted transition-colors">
-          Our hotels
-        </Link>
-        <Link href="/destinations" className="hover:text-muted transition-colors">
-          Destinations
-        </Link>
-        <Link href="/offers" className="hover:text-muted transition-colors">
-          Offers
-        </Link>
-        <Link href="/suite-life" className="hover:text-muted transition-colors">
-          The Suite life
-        </Link>
-      </div>
-
-      {/* Auth & Primary Action */}
-      <div className="flex items-center space-x-6">
-        <Link href="/login" className="text-sm font-semibold hover:text-muted transition-colors">
-          Sign in
-        </Link>
+      {/* Navigation Actions */}
+      <div className="flex items-center gap-2 sm:gap-4">
+        {/* Sign in: Shows icon on mobile, text link on desktop */}
         <Link 
-          href="/search" 
-          className="bg-accent hover:bg-accent-hover text-white px-5 py-2.5 rounded-control text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
+          href="/login" 
+          className="text-xs font-bold hover:text-accent transition-colors p-2 sm:p-0 flex items-center gap-1 text-white/90"
+          title="Sign in"
         >
-          Find your stay <ArrowUpRight className="w-4 h-4" />
+          <User className="w-4 h-4 sm:hidden" />
+          <span className="hidden sm:inline">Sign in</span>
+        </Link>
+
+        {/* Find your stay button */}
+        <Link 
+          href="/hotels" 
+          className="bg-accent hover:bg-accent-hover text-white text-xs font-bold px-3 sm:px-4 py-2.5 rounded-control flex items-center gap-1.5 transition-all"
+        >
+          <span>Find your stay</span>
+          <span className="text-sm">↗</span>
         </Link>
       </div>
-    </nav>
+    </header>
   );
 }
