@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 MAX_GUESTS = 10
 MAX_STAY_NIGHTS = 30
@@ -29,18 +29,33 @@ class HotelSearchParams(BaseModel):
         default=None, alias="roomType"
     )
 
-    @model_validator(mode="after")
-    def check_dates_and_prices(self) -> "HotelSearchParams":
-        if self.check_in < date.today():
+    # Field validators (not a model validator) so each error's loc names the
+    # field, e.g. ["query", "check_out"], and the form can highlight it.
+    @field_validator("check_in")
+    @classmethod
+    def check_in_not_past(cls, value: date) -> date:
+        if value < date.today():
             raise ValueError("Check-in can't be in the past.")
-        if self.check_out <= self.check_in:
+        return value
+
+    @field_validator("check_out")
+    @classmethod
+    def check_out_after_check_in(cls, value: date, info: ValidationInfo) -> date:
+        check_in = info.data.get("check_in")
+        if check_in is None:
+            return value
+        if value <= check_in:
             raise ValueError("Check-out must be after check-in.")
-        if (self.check_out - self.check_in).days > MAX_STAY_NIGHTS:
+        if (value - check_in).days > MAX_STAY_NIGHTS:
             raise ValueError(f"Stays are limited to {MAX_STAY_NIGHTS} nights.")
-        if (
-            self.min_price is not None
-            and self.max_price is not None
-            and self.min_price > self.max_price
-        ):
+        return value
+
+    @field_validator("max_price")
+    @classmethod
+    def max_price_not_below_min(
+        cls, value: float | None, info: ValidationInfo
+    ) -> float | None:
+        min_price = info.data.get("min_price")
+        if value is not None and min_price is not None and min_price > value:
             raise ValueError("Minimum price can't be more than maximum price.")
-        return self
+        return value
