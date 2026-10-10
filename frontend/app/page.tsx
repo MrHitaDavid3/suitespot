@@ -29,7 +29,7 @@ const HOTELS = [
     tags: 'Pool · Breakfast included · Beach nearby',
     price: '$189',
     image:
-      'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QkXGXfAwhzFSwjYRyzUwsCkd2Z3ccrtRNTTePrE44Cewcrzo_64983KqKSRj4YZBBOLtpv3xbAN2aIoCxvQsubiA7dzNGloJp1w5y1xDo5kOsGgAUJ517VVM3wUWqkrhqg_0wR=s680-w680-h510-rw',
+      'https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-022-header-2_medium.jpg',
   },
   {
     id: 'hoxton-amsterdam',
@@ -40,7 +40,7 @@ const HOTELS = [
     tags: 'Canal views · Restaurant · Design-led rooms',
     price: '$215',
     image:
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1000&auto=format&fit=crop',
+      'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9SWXXNsxzmlKzs5LUAWq0ReZ5ZKGZcyoaEQvWgwwRoz41oAkaz1DNScTKPVSt3Z9MAEkab5O7HxrU0jBEjZn3envk5r0ifdTglEoehJf9A-Syi9uCjoOJYEtmJu4oHcoeSrUZktEg=s680-w680-h510-rw',
   },
   {
     id: 'forestis',
@@ -51,7 +51,7 @@ const HOTELS = [
     tags: 'Mountain views · Spa · Adults-only',
     price: '$340',
     image:
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1000&auto=format&fit=crop',
+      'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/29/8c/6b/forestis.jpg?w=900&h=500&s=1',
   },
 ];
 
