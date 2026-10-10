@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { 
@@ -139,12 +138,13 @@ export default function HotelDetailPage() {
           <span className="text-ink uppercase tracking-wider">{hotel.name}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-muted">
-            <Link href="/" className="hover:text-ink transition-colors">Home</Link>
-            <ChevronRight className="w-3.5 h-3.5" />
-            <Link href="/hotels" className="hover:text-ink transition-colors">Hotels</Link>
-            <ChevronRight className="w-3.5 h-3.5" />
-             <span className="text-ink uppercase tracking-wider">{hotel.name}</span>
+        <div className="flex items-center gap-4">
+          <button className="flex items-center gap-1.5 hover:text-accent transition-colors">
+            <Share2 className="w-4 h-4" /> Share
+          </button>
+          <button className="flex items-center gap-1.5 hover:text-accent transition-colors">
+            <Heart className="w-4 h-4" /> Save
+          </button>
         </div>
       </div>
 
