@@ -106,7 +106,7 @@ export default function Home() {
           <div className="lg:col-span-6 flex justify-end">
             <div className="relative w-full max-w-xl 2xl:max-w-2xl aspect-[4/5] rounded-t-full overflow-hidden shadow-2xl">
               <img 
-                src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QkXGXfAwhzFSwjYRyzUwsCkd2Z3ccrtRNTTePrE44Cewcrzo_64983KqKSRj4YZBBOLtpv3xbAN2aIoCxvQsubiA7dzNGloJp1w5y1xDo5kOsGgAUJ517VVM3wUWqkrhqg_0wR=s680-w680-h510-rw" 
+                src="https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-017.jpg" 
                 alt="Casa Sol, Mallorca" 
                 className="w-full h-full object-cover"
               />
