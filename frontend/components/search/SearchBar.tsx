@@ -1,23 +1,17 @@
-"use client";
+'use client';
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { MapPin, Calendar, Users, ArrowUpRight, Plus, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Task 1.1.1 - search bar (destination, dates, guests).
-// Default: goes to /search?destination=...&checkIn=...&checkOut=...&guests=...
-// Pass onSearch to handle it yourself instead (e.g. on the results page).
 
 export type SearchValues = {
   destination: string;
-  checkIn: string; // YYYY-MM-DD
-  checkOut: string; // YYYY-MM-DD
-  guests: number;
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  children: number;
 };
-
-type Errors = Partial<Record<keyof SearchValues, string>>;
 
 type SearchBarProps = {
   defaultValues?: Partial<SearchValues>;
@@ -25,151 +19,197 @@ type SearchBarProps = {
   className?: string;
 };
 
-// local date as YYYY-MM-DD (en-CA formats that way)
 const today = () => new Date().toLocaleDateString("en-CA");
 const noopSubscribe = () => () => {};
 
-function validate(v: SearchValues): Errors {
-  const e: Errors = {};
-  if (!v.destination.trim()) e.destination = "Where are you going?";
-  if (!v.checkIn) e.checkIn = "Pick a check-in date.";
-  else if (v.checkIn < today()) e.checkIn = "Check-in can't be in the past.";
-  if (!v.checkOut) e.checkOut = "Pick a check-out date.";
-  else if (v.checkIn && v.checkOut <= v.checkIn) e.checkOut = "Check-out must be after check-in.";
-  if (!Number.isInteger(v.guests) || v.guests < 1) e.guests = "At least 1 guest.";
-  else if (v.guests > 10) e.guests = "Max 10 guests.";
-  return e;
-}
-
 export default function SearchBar({ defaultValues, onSearch, className }: SearchBarProps) {
   const router = useRouter();
-  const [values, setValues] = useState<SearchValues>({
-    destination: defaultValues?.destination ?? "",
-    checkIn: defaultValues?.checkIn ?? "",
-    checkOut: defaultValues?.checkOut ?? "",
-    guests: defaultValues?.guests ?? 2,
-  });
-  const [errors, setErrors] = useState<Errors>({});
-  // Server renders with no min (server clock is UTC); browser fills in the user's local date.
+  const [destination, setDestination] = useState(defaultValues?.destination ?? "");
+  const [checkIn, setCheckIn] = useState(defaultValues?.checkIn ?? "2026-11-21");
+  const [checkOut, setCheckOut] = useState(defaultValues?.checkOut ?? "2026-11-24");
+  const [adults, setAdults] = useState(defaultValues?.adults ?? 2);
+  const [children, setChildren] = useState(defaultValues?.children ?? 0);
+  
+  const [isGuestOpen, setIsGuestOpen] = useState(false);
+  const guestRef = useRef<HTMLDivElement>(null);
+
   const minDate = useSyncExternalStore(noopSubscribe, today, () => "");
 
-  function update<K extends keyof SearchValues>(name: K, value: SearchValues[K]) {
-    setValues((v) => ({ ...v, [name]: value }));
-    if (errors[name]) setErrors((e) => ({ ...e, [name]: undefined }));
-  }
+  // Close guest dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (guestRef.current && !guestRef.current.contains(e.target as Node)) {
+        setIsGuestOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const clean = { ...values, destination: values.destination.trim() };
-    const found = validate(clean);
-    setErrors(found);
-    if (Object.keys(found).length > 0) return;
-
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const cleanDestination = destination.trim();
     if (onSearch) {
-      onSearch(clean);
+      onSearch({ destination: cleanDestination, checkIn, checkOut, adults, children });
       return;
     }
+
     const params = new URLSearchParams({
-      destination: clean.destination,
-      checkIn: clean.checkIn,
-      checkOut: clean.checkOut,
-      guests: String(clean.guests),
+      destination: cleanDestination,
+      checkIn,
+      checkOut,
+      guests: String(adults + children),
+      adults: String(adults),
+      children: String(children),
     });
-    router.push(`/search?${params.toString()}`);
+    router.push(`/hotels?${params.toString()}`);
   }
+
+  const totalGuests = adults + children;
 
   return (
     <form
       onSubmit={handleSubmit}
-      noValidate
-      role="search"
       className={cn(
-        "grid w-full grid-cols-1 gap-3 rounded-card border border-line bg-surface p-4 text-left shadow-sm sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_0.8fr_auto] lg:items-start",
+        "bg-surface rounded-control border border-line shadow-sm p-4 w-full",
         className
       )}
     >
-      <SearchField id="destination" label="Destination" error={errors.destination} className="sm:col-span-2 lg:col-span-1">
-        <Input
-          id="destination"
-          placeholder="City or hotel name"
-          value={values.destination}
-          onChange={(e) => update("destination", e.target.value)}
-          aria-invalid={!!errors.destination}
-          aria-describedby={errors.destination ? "destination-error" : undefined}
-        />
-      </SearchField>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        
+        {/* 1. DESTINATION */}
+        <div className="md:col-span-4 border-b md:border-b-0 md:border-r border-line pb-3 md:pb-0 md:pr-4 flex items-center gap-3">
+          <MapPin className="w-5 h-5 text-ink shrink-0" />
+          <div className="w-full">
+            <label htmlFor="destination" className="block text-[10px] font-bold tracking-wider text-muted uppercase">
+              WHERE TO?
+            </label>
+            <input 
+              id="destination"
+              type="text" 
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              placeholder="City, region or hotel" 
+              className="w-full text-sm font-semibold text-ink focus:outline-none placeholder-muted bg-transparent mt-0.5"
+            />
+          </div>
+        </div>
 
-      <SearchField id="checkIn" label="Check-in" error={errors.checkIn}>
-        <Input
-          id="checkIn"
-          type="date"
-          min={minDate || undefined}
-          value={values.checkIn}
-          onChange={(e) => update("checkIn", e.target.value)}
-          aria-invalid={!!errors.checkIn}
-          aria-describedby={errors.checkIn ? "checkIn-error" : undefined}
-        />
-      </SearchField>
+        {/* 2. CHECK-IN */}
+        <div className="md:col-span-2 border-b md:border-b-0 md:border-r border-line pb-3 md:pb-0 md:pr-4 flex items-center gap-3">
+         <Calendar className="w-5 h-5 text-ink shrink-0" />
+         <div className="w-full">
+           <label htmlFor="checkIn" className="block text-[10px] font-bold tracking-wider text-muted uppercase cursor-pointer">
+             CHECK-IN
+           </label>
+            <input
+              id="checkIn"
+              type="date"
+             min={minDate || undefined}
+             value={checkIn}
+             onChange={(e) => setCheckIn(e.target.value)}
+             className="w-full text-sm font-semibold text-ink bg-transparent focus:outline-none mt-0.5 cursor-pointer"
+           />
+         </div>
+        </div>
 
-      <SearchField id="checkOut" label="Check-out" error={errors.checkOut}>
-        <Input
-          id="checkOut"
-          type="date"
-          min={values.checkIn || minDate || undefined}
-          value={values.checkOut}
-          onChange={(e) => update("checkOut", e.target.value)}
-          aria-invalid={!!errors.checkOut}
-          aria-describedby={errors.checkOut ? "checkOut-error" : undefined}
-        />
-      </SearchField>
+        {/* 3. CHECK-OUT */}
+        <div className="md:col-span-2 border-b md:border-b-0 md:border-r border-line pb-3 md:pb-0 md:pr-4 flex items-center gap-3">
+          <Calendar className="w-5 h-5 text-ink shrink-0" />
+         <div className="w-full">
+            <label htmlFor="checkOut" className="block text-[10px] font-bold tracking-wider text-muted uppercase cursor-pointer">
+             CHECK-OUT
+           </label>
+           <input
+              id="checkOut"
+             type="date"
+             min={checkIn || minDate || undefined}
+             value={checkOut}
+             onChange={(e) => setCheckOut(e.target.value)}
+             className="w-full text-sm font-semibold text-ink bg-transparent focus:outline-none mt-0.5 cursor-pointer"
+            />
+          </div>
+        </div>
 
-      <SearchField id="guests" label="Guests" error={errors.guests}>
-        <Input
-          id="guests"
-          type="number"
-          inputMode="numeric"
-          min={1}
-          max={10}
-          value={Number.isNaN(values.guests) ? "" : values.guests}
-          onChange={(e) => update("guests", e.target.valueAsNumber)}
-          aria-invalid={!!errors.guests}
-          aria-describedby={errors.guests ? "guests-error" : undefined}
-        />
-      </SearchField>
+        {/* 4. GUESTS (Adults & Children Selector Dropdown) */}
+        <div className="md:col-span-2 pb-3 md:pb-0 md:pr-2 flex items-center gap-3 relative" ref={guestRef}>
+          <Users className="w-5 h-5 text-ink shrink-0" />
+          <div className="w-full cursor-pointer" onClick={() => setIsGuestOpen(!isGuestOpen)}>
+            <span className="block text-[10px] font-bold tracking-wider text-muted uppercase">GUESTS</span>
+            <span className="text-sm font-semibold text-ink block mt-0.5 truncate">
+              {adults} adults{children > 0 ? `, ${children} child` : ''}
+            </span>
+          </div>
 
-      <div className="sm:col-span-2 lg:col-span-1 lg:pt-6">
-        <Button type="submit" size="lg" className="w-full lg:w-auto">
-          Search
-        </Button>
+          {/* Guest Dropdown Popup */}
+          {isGuestOpen && (
+            <div className="absolute top-full left-0 mt-2 w-64 bg-surface rounded-card border border-line shadow-lg p-4 z-50 space-y-4">
+              {/* Adults Counter */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-ink">Adults</p>
+                  <p className="text-[10px] text-muted">Ages 13 or above</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setAdults(Math.max(1, adults - 1))}
+                    disabled={adults <= 1}
+                    className="w-7 h-7 rounded-full border border-line flex items-center justify-center hover:bg-surface-muted disabled:opacity-40"
+                  >
+                    <Minus className="w-3.5 h-3.5 text-ink" />
+                  </button>
+                  <span className="text-xs font-bold w-4 text-center">{adults}</span>
+                  <button
+                    type="button"
+                    onClick={() => setAdults(Math.min(10, adults + 1))}
+                    className="w-7 h-7 rounded-full border border-line flex items-center justify-center hover:bg-surface-muted"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-ink" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Children Counter */}
+              <div className="flex items-center justify-between pt-3 border-t border-line/60">
+                <div>
+                  <p className="text-xs font-bold text-ink">Children</p>
+                  <p className="text-[10px] text-muted">Ages 0–12</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setChildren(Math.max(0, children - 1))}
+                    disabled={children <= 0}
+                    className="w-7 h-7 rounded-full border border-line flex items-center justify-center hover:bg-surface-muted disabled:opacity-40"
+                  >
+                    <Minus className="w-3.5 h-3.5 text-ink" />
+                  </button>
+                  <span className="text-xs font-bold w-4 text-center">{children}</span>
+                  <button
+                    type="button"
+                    onClick={() => setChildren(Math.min(6, children + 1))}
+                    className="w-7 h-7 rounded-full border border-line flex items-center justify-center hover:bg-surface-muted"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-ink" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 5. SUBMIT BUTTON */}
+        <div className="md:col-span-2">
+          <button 
+            type="submit" 
+            className="w-full bg-accent hover:bg-accent-hover text-white py-3 px-4 rounded-control font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            Search stays <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+
       </div>
     </form>
-  );
-}
-
-function SearchField({
-  id,
-  label,
-  error,
-  className,
-  children,
-}: {
-  id: string;
-  label: string;
-  error?: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className={cn("space-y-1.5", className)}>
-      <label htmlFor={id} className="block text-xs font-medium uppercase tracking-wider text-muted">
-        {label}
-      </label>
-      {children}
-      {error && (
-        <p id={`${id}-error`} className="text-xs text-danger">
-          {error}
-        </p>
-      )}
-    </div>
   );
 }
