@@ -15,5 +15,4 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(search.router)
-app.include_router(register.router)
 app.include_router(auth_tokens.router)
