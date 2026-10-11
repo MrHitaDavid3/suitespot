@@ -1,13 +1,5 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-
-export const metadata: Metadata = {
-  title: "LikeHome | Find Your Next Stay",
-  description: "Hotels.com style booking platform",
-};
+import Navbar from '@/components/layout/Navbar';
+import './globals.css';
 
 export default function RootLayout({
   children,
@@ -16,10 +8,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-        <body className="bg-stone-50 text-stone-900 antialiased min-h-screen flex flex-col">
+      <body className="font-sans bg-canvas text-ink min-h-screen flex flex-col antialiased">
         <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <div className="flex-grow bg-canvas">
+          {children}
+        </div>
       </body>
     </html>
   );

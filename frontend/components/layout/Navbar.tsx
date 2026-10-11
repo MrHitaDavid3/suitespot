@@ -1,39 +1,44 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import Link from 'next/link';
+import { User } from 'lucide-react';
 
-export function Navbar() {
+export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-stone-200/80 bg-stone-50/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-1 sm:gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-1 shrink-0">
-          <span className="font-semibold text-sm sm:text-base md:text-lg text-stone-900 tracking-tight">
+    <header className="w-full bg-ink text-white py-4 px-6 lg:px-16 flex items-center justify-between">
+      {/* Logo & Brand */}
+      <Link href="/" className="flex items-center gap-3">
+        <div className="bg-accent text-white font-black px-2.5 py-1.5 rounded text-sm">
+          S
+        </div>
+        <div className="flex flex-col">
+          <span className="font-black text-base sm:text-lg tracking-tight leading-none">
             LikeHome
           </span>
-          <span className="hidden md:inline text-xs text-stone-500 font-normal">
-            by SuiteSpot
+          <span className="text-[9px] sm:text-[10px] text-muted tracking-widest uppercase">
+            BY SUITESPOT
           </span>
+        </div>
+      </Link>
+
+      {/* Navigation Actions */}
+      <div className="flex items-center gap-2 sm:gap-4">
+        {/* Sign in: Shows icon on mobile, text link on desktop */}
+        <Link 
+          href="/login" 
+          className="text-xs font-bold hover:text-accent transition-colors p-2 sm:p-0 flex items-center gap-1 text-white/90"
+          title="Sign in"
+        >
+          <User className="w-4 h-4 sm:hidden" />
+          <span className="hidden sm:inline">Sign in</span>
         </Link>
 
-        {/* Nav Links */}
-        <nav className="flex items-center space-x-3 sm:space-x-6 text-xs sm:text-sm font-medium text-stone-600">
-          <Link href="/" className="hover:text-stone-900 transition-colors">Explore</Link>
-          <Link href="/bookings" className="hover:text-stone-900 transition-colors whitespace-nowrap">My Bookings</Link>
-        </nav>
-
-        {/* Auth Buttons */}
-        <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
-          <Link href="/login">
-            <span className="text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 px-1 py-1 whitespace-nowrap">
-              Sign In
-            </span>
-          </Link>
-          <Link href="/register">
-            <Button size="sm" className="bg-stone-900 text-stone-50 hover:bg-stone-800 text-xs sm:text-sm px-2.5 sm:px-3 h-8 sm:h-9 whitespace-nowrap">
-              Get Started
-            </Button>
-          </Link>
-        </div>
+        {/* Find your stay button */}
+        <Link 
+          href="/hotels" 
+          className="bg-accent hover:bg-accent-hover text-white text-xs font-bold px-3 sm:px-4 py-2.5 rounded-control flex items-center gap-1.5 transition-all"
+        >
+          <span>Find your stay</span>
+          <span className="text-sm">↗</span>
+        </Link>
       </div>
     </header>
   );
