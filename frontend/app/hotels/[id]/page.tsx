@@ -94,7 +94,7 @@ const HOTELS_DATA: Record<string, {
       'Set across five historic canal houses on the Herengracht, The Hoxton brings classic Dutch architecture into dialogue with modern, design-forward room layouts and curated local art.',
     price: 215,
     images: [
-      'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9SWXXNsxzmlKzs5LUAWq0ReZ5ZKGZcyoaEQvWgwwRoz41oAkaz1DNScTKPVSt3Z9MAEkab5O7HxrU0jBEjZn3envk5r0ifdTglEoehJf9A-Syi9uCjoOJYEtmJu4oHcoeSrUZktEg=s680-w680-h510-rw',
+      'https://thehoxton.com/wp-content/uploads/sites/5/2020/05/Amsterdam_Hero.jpg',
       'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TcmMQ8mgIob-yujUh6oZbdotb91bYkr5iB58ALdtAMpQCPjpQBtzGy46oF36elW6-z52nurdk4-ZeIZV5kTxpwftnAaZkBzX1rCbi6Lus24OEX3ii2eU74V0y2yICu4XHl1p4=s680-w680-h510-rw',
       'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TMqCZj0zC9mES8ybt5IAQ-Rjg2iKpbfKK5iBxGDTnYe8UJjob8YQidP63jnzmP6RMwVYMLYaTxosnaI0AJfF4TTJ8PyfSv263ikJmpUg68oY5FLkeu3E08ZA8fRNpzd7IxR_c_=s680-w680-h510-rw',
     ],
