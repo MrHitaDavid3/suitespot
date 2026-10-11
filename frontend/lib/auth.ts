@@ -61,10 +61,13 @@ export function refreshSession(): Promise<boolean> {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refresh_token }),
         });
-        if (!res.ok) {
+        if (res.status === 401) {
+          // The refresh token itself was rejected: the session is over.
           clearTokens();
           return false;
         }
+        // Server trouble (e.g. a 502 mid-deploy) shouldn't log anyone out.
+        if (!res.ok) return false;
         saveTokens(await res.json());
         return true;
       } catch {
