@@ -161,31 +161,31 @@ export default function HotelDetailPage() {
   return (
     <div className="bg-canvas min-h-screen text-ink pb-24">
       {/* Breadcrumb Bar */}
-      <div className="max-w-[1600px] mx-auto px-8 lg:px-16 pt-6 pb-4 flex items-center justify-between text-xs font-bold">
-        <div className="flex items-center gap-2 text-muted">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-16 pt-6 pb-4 flex items-center justify-between text-xs font-bold">
+        <div className="flex items-center gap-2 text-muted min-w-0">
           <Link href="/" className="hover:text-ink transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <Link href="/hotels" className="hover:text-ink transition-colors">Hotels</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-ink uppercase tracking-wider">{hotel.name}</span>
+          <span className="text-ink uppercase tracking-wider truncate">{hotel.name}</span>
         </div>
       </div>
 
       {/* Main Header */}
-      <section className="max-w-[1600px] mx-auto px-8 lg:px-16 mb-8">
+      <section className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-16 mb-8">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-white/95 px-3 py-1 rounded-control text-xs font-bold border border-line shadow-sm">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-2">
+              <span className="bg-white/95 px-3 py-1 rounded-control text-xs font-bold border border-line shadow-sm whitespace-nowrap">
                 {hotel.badge}
               </span>
-              <div className="flex items-center gap-1 text-sm font-bold">
+              <div className="flex items-center gap-1 text-sm font-bold whitespace-nowrap">
                 <Star className="w-4 h-4 fill-ink text-ink" />
                 <span>{hotel.rating}</span>
                 <span className="text-muted font-normal">({hotel.reviewsCount} reviews)</span>
               </div>
             </div>
-            <h1 className="text-5xl sm:text-6xl font-black tracking-tight uppercase leading-none">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight uppercase leading-none break-words">
               {hotel.name}
             </h1>
             <p className="flex items-center gap-1.5 text-muted font-semibold mt-2">
@@ -205,7 +205,7 @@ export default function HotelDetailPage() {
       </section>
 
       {/* Image Gallery Grid */}
-      <section className="max-w-[1600px] mx-auto px-8 lg:px-16 mb-16">
+      <section className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-16 mb-10 sm:mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-8 aspect-[16/10] rounded-card overflow-hidden shadow-sm">
             <img 
@@ -229,10 +229,10 @@ export default function HotelDetailPage() {
       </section>
 
       {/* Content & Booking Section */}
-      <section className="max-w-[1600px] mx-auto px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <section className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
         
         {/* Left Column: Details & Rooms */}
-        <div className="lg:col-span-7 space-y-12">
+        <div className="lg:col-span-7 space-y-10 sm:space-y-12">
           
           {/* Overview */}
           <div>
@@ -245,7 +245,7 @@ export default function HotelDetailPage() {
           {/* Key Amenities */}
           <div className="border-t border-line/60 pt-8">
             <h2 className="text-xl font-black tracking-tight uppercase mb-6">What this stay offers</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               {hotel.amenities.map((item, idx) => {
                 const Icon = item.icon;
                 return (
@@ -269,22 +269,22 @@ export default function HotelDetailPage() {
                   <div 
                     key={room.id}
                     onClick={() => setSelectedRoom(room.id)}
-                    className={`p-6 rounded-card border transition-all cursor-pointer ${
+                    className={`p-4 sm:p-6 rounded-card border transition-all cursor-pointer ${
                       isSelected 
                         ? 'border-ink bg-surface shadow-md' 
                         : 'border-line bg-surface/50 hover:border-ink/50'
                     }`}
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center">
                       <div className="md:col-span-4 aspect-[4/3] rounded-control overflow-hidden">
                         <img src={room.image} alt={room.title} className="w-full h-full object-cover" />
                       </div>
 
                       <div className="md:col-span-8 flex flex-col justify-between space-y-4">
                         <div>
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col min-[400px]:flex-row min-[400px]:items-start justify-between gap-1 min-[400px]:gap-4">
                             <h3 className="text-xl font-black text-ink">{room.title}</h3>
-                            <span className="text-xl font-black text-ink">${room.price}<span className="text-xs font-normal text-muted">/night</span></span>
+                            <span className="text-xl font-black text-ink whitespace-nowrap">${room.price}<span className="text-xs font-normal text-muted">/night</span></span>
                           </div>
                           <p className="text-xs font-bold text-muted mt-1">{room.bed} · {room.capacity} · {room.size}</p>
                         </div>
@@ -318,15 +318,15 @@ export default function HotelDetailPage() {
         </div>
 
         {/* Right Column: Sticky Booking Widget */}
-        <div className="lg:col-span-5">
-          <div className="sticky top-8 bg-surface rounded-card border border-line shadow-lg p-6 lg:p-8 space-y-6">
+        <div id="reserve" className="lg:col-span-5 scroll-mt-4">
+          <div className="sticky top-8 bg-surface rounded-card border border-line shadow-lg p-5 sm:p-6 lg:p-8 space-y-6">
             <div>
               <span className="text-xs font-black tracking-widest text-muted uppercase block mb-1">RESERVATION DETAILS</span>
               <h3 className="text-2xl font-black text-ink">Reserve your stay</h3>
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 rounded-control border border-line bg-canvas flex items-center justify-between">
+              <div className="p-4 rounded-control border border-line bg-canvas flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-ink shrink-0" />
                   <div>
@@ -334,7 +334,7 @@ export default function HotelDetailPage() {
                     <span className="text-sm font-semibold text-ink">21 Nov 2026 – 24 Nov 2026</span>
                   </div>
                 </div>
-                <span className="text-xs font-bold text-accent">3 nights</span>
+                <span className="text-xs font-bold text-accent whitespace-nowrap">3 nights</span>
               </div>
 
               <div className="p-4 rounded-control border border-line bg-canvas flex items-center gap-3">
@@ -372,6 +372,20 @@ export default function HotelDetailPage() {
         </div>
 
       </section>
+
+      {/* Mobile: price + reserve shortcut (6.3.2). The booking widget sits below the rooms on small screens. */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur px-4 py-3 flex items-center justify-between gap-4">
+        <div>
+          <span className="text-xl font-black text-ink">${hotel.price}</span>
+          <span className="text-xs font-medium text-muted"> / night</span>
+        </div>
+        <a
+          href="#reserve"
+          className="bg-accent hover:bg-accent-hover text-white text-sm font-bold px-5 py-3 rounded-control whitespace-nowrap transition-colors"
+        >
+          Reserve
+        </a>
+      </div>
     </div>
   );
 }
