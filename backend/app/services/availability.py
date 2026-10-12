@@ -9,6 +9,7 @@ Reused later by:
   - 2.1.2          re-check availability at booking time (is_room_available)
 """
 from datetime import date
+from typing import Literal, get_args
 
 from sqlalchemy import exists, func, or_, select
 from sqlalchemy.orm import Session
@@ -17,6 +18,25 @@ from app.models import Hotel, Reservation, Room
 
 # Reservation statuses that do NOT hold a room.
 FREE_STATUSES = ("cancelled",)
+
+# 1.5.1 Sort options for search results. These match the values the frontend
+# SortControl sends. "recommended" is the default and currently orders by name.
+# Distance isn't supported yet: hotels have no latitude/longitude columns.
+SortOption = Literal["recommended", "price_asc", "price_desc", "rating"]
+
+
+def _ordering(sort: str) -> list:
+    """ORDER BY terms for a sort option. Hotel.id is always last so paging is stable."""
+    from_price = func.min(Room.price_per_night)
+    orderings = {
+        "recommended": [Hotel.name],
+        "price_asc": [from_price.asc(), Hotel.name],
+        "price_desc": [from_price.desc(), Hotel.name],
+        "rating": [Hotel.star_rating.desc(), from_price.asc(), Hotel.name],
+    }
+    if sort not in orderings:
+        raise ValueError(f"sort must be one of {get_args(SortOption)}, got {sort!r}")
+    return [*orderings[sort], Hotel.id]
 
 
 def _room_is_booked(check_in: date, check_out: date):
@@ -47,6 +67,7 @@ def find_available_hotels(
     check_in: date,
     check_out: date,
     guests: int,
+    sort: SortOption = "recommended",
     limit: int = 20,
     offset: int = 0,
 ) -> list[dict]:
@@ -76,7 +97,7 @@ def find_available_hotels(
             ~_room_is_booked(check_in, check_out),
         )
         .group_by(Hotel.id)
-        .order_by(Hotel.name, Hotel.id)
+        .order_by(*_ordering(sort))
         .limit(limit)
         .offset(offset)
     )
