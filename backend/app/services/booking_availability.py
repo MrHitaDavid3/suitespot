@@ -79,11 +79,6 @@ def place_hold(
     special_requests: str | None = None,
     now: datetime | None = None,
 ) -> Reservation:
-    room = db.get(Room, room_id)
-
-    if room is None:
-        raise RoomNotFound(room_id)
-
     now = now or datetime.now(timezone.utc)
 
     if check_out <= check_in:
@@ -104,24 +99,26 @@ def place_hold(
             "Number of guests must be at least 1.",
         )
 
+    release_expired_holds(db, now=now)
+
+    # FOR UPDATE locks the room row on PostgreSQL, so two guests submitting at
+    # the same moment are checked one after the other. SQLite ignores it.
+    room = db.execute(
+        select(Room).where(Room.id == room_id).with_for_update()
+    ).scalar_one_or_none()
+
+    if room is None:
+        raise RoomNotFound(f"Room {room_id} does not exist.")
+
     if num_guests > room.max_guests:
         raise InvalidStay(
             "num_guests",
-            "Number of guests exceeds room capacity.",
+            f"This room sleeps at most {room.max_guests} guests.",
         )
 
-    release_expired_holds(db, now=now)
-
-    if (
-        not room.is_available
-        or not is_room_available(
-            db,
-            room.id,
-            check_in,
-            check_out,
-        )
-    ):
-        raise RoomUnavailable(room_id)
+    if not is_room_available(db, room.id, check_in, check_out):
+        db.rollback()  # release the room lock
+        raise RoomUnavailable("This room is no longer available for those dates.")
 
     nights = (check_out - check_in).days
     total_price = Decimal(str(room.price_per_night)) * nights
