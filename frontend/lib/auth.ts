@@ -2,7 +2,9 @@
 // Tokens come from the API (5.2.2) and live in localStorage. The server is the
 // authority on whether a token is valid; the client only reads `exp` to know
 // when to refresh early.
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+).replace(/\/+$/, "");
 
 const ACCESS_KEY = "suitespot.access";
 const REFRESH_KEY = "suitespot.refresh";
