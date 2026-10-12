@@ -2,15 +2,13 @@
 
 import React, { useState } from 'react';
 import { 
-  MapPin, 
-  Calendar, 
-  Users, 
   ArrowUpRight, 
-  ArrowDown, 
   Heart, 
   Star, 
-  ArrowRight
+  ArrowRight,
+  ArrowDown
 } from 'lucide-react';
+import SearchBar from '@/components/search/SearchBar'; // Import your interactive search bar component
 
 const CATEGORIES = [
   'Our favorites',
@@ -66,52 +64,9 @@ export default function Home() {
         
         {/* Search Controls */}
         <div className="mb-6">
-          <div className="bg-surface rounded-control border border-line shadow-sm p-5 mb-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-              
-              <div className="md:col-span-4 border-b md:border-b-0 md:border-r border-line pb-3 md:pb-0 md:pr-6 flex items-center gap-4">
-                <MapPin className="w-6 h-6 text-ink shrink-0" />
-                <div className="w-full">
-                  <span className="block text-xs font-bold tracking-wider text-muted uppercase">WHERE TO?</span>
-                  <input 
-                    type="text" 
-                    placeholder="City, region or hotel" 
-                    className="w-full text-base font-semibold text-ink focus:outline-none placeholder-muted bg-transparent mt-0.5"
-                  />
-                </div>
-              </div>
-
-              <div className="md:col-span-2 border-b md:border-b-0 md:border-r border-line pb-3 md:pb-0 md:pr-6 flex items-center gap-4">
-                <Calendar className="w-6 h-6 text-ink shrink-0" />
-                <div>
-                  <span className="block text-xs font-bold tracking-wider text-muted uppercase">CHECK-IN</span>
-                  <span className="text-base font-semibold text-ink block mt-0.5">21 Nov 2026</span>
-                </div>
-              </div>
-
-              <div className="md:col-span-2 border-b md:border-b-0 md:border-r border-line pb-3 md:pb-0 md:pr-6 flex items-center gap-4">
-                <Calendar className="w-6 h-6 text-ink shrink-0" />
-                <div>
-                  <span className="block text-xs font-bold tracking-wider text-muted uppercase">CHECK-OUT</span>
-                  <span className="text-base font-semibold text-ink block mt-0.5">24 Nov 2026</span>
-                </div>
-              </div>
-
-              <div className="md:col-span-2 pb-3 md:pb-0 flex items-center gap-4">
-                <Users className="w-6 h-6 text-ink shrink-0" />
-                <div>
-                  <span className="block text-xs font-bold tracking-wider text-muted uppercase">GUESTS</span>
-                  <span className="text-base font-semibold text-ink block mt-0.5">2 adults · 1 room</span>
-                </div>
-              </div>
-
-              <div className="md:col-span-2">
-                <a href="#explore" className="w-full bg-accent hover:bg-accent-hover text-white py-3.5 px-5 rounded-control font-bold text-base flex items-center justify-center gap-2 transition-all shadow-sm">
-                  Search stays <ArrowUpRight className="w-5 h-5" />
-                </a>
-              </div>
-
-            </div>
+          {/* Replace static markup with your interactive SearchBar component */}
+          <div className="mb-4">
+            <SearchBar />
           </div>
 
           <p className="text-sm text-muted font-medium px-1">
@@ -151,7 +106,7 @@ export default function Home() {
           <div className="lg:col-span-6 flex justify-end">
             <div className="relative w-full max-w-xl 2xl:max-w-2xl aspect-[4/5] rounded-t-full overflow-hidden shadow-2xl">
               <img 
-                src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QkXGXfAwhzFSwjYRyzUwsCkd2Z3ccrtRNTTePrE44Cewcrzo_64983KqKSRj4YZBBOLtpv3xbAN2aIoCxvQsubiA7dzNGloJp1w5y1xDo5kOsGgAUJ517VVM3wUWqkrhqg_0wR=s680-w680-h510-rw" 
+                src="https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-017.jpg" 
                 alt="Casa Sol, Mallorca" 
                 className="w-full h-full object-cover"
               />
@@ -334,7 +289,6 @@ export default function Home() {
           {/* Main Footer Content */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
             
-            {/* Brand Info */}
             <div className="md:col-span-4 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-accent rounded-control flex items-center justify-center font-black text-ink text-xl">
