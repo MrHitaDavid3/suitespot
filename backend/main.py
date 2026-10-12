@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -8,9 +10,22 @@ from app.routers import auth_tokens, health, logout, register, search
 
 app = FastAPI(title="SuiteSpot API", version="0.1.0")
 
+# Comma-separated. Trailing "/" is stripped because browsers send Origin without one.
+CORS_ORIGINS = [
+    o.strip().rstrip("/")
+    for o in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    if o.strip()
+]
+# Vercel preview deploys for this project only (team-scoped URLs). Set to "" to disable.
+CORS_ORIGIN_REGEX = os.getenv(
+    "CORS_ORIGIN_REGEX",
+    r"https://suitespot(-[a-z0-9-]+)?-buyans-projects-56ef48dc\.vercel\.app",
+) or None
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=CORS_ORIGINS,
+    allow_origin_regex=CORS_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
