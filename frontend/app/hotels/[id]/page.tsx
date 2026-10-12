@@ -50,7 +50,7 @@ const HOTELS_DATA: Record<string, {
       "Perched along the Mediterranean coastline, Casa Sol combines relaxed island architecture with modern luxury. Enjoy private terrace sea views, locally sourced daily breakfasts, and seamless access to Mallorca's quietest coves.",
     price: 189,
     images: [
-      'https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-017.jpg',
+      'https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-022-header-2_medium.jpg',
       'https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-001.jpg',
       'https://manage.isleblue.co/uploads/villas/images/9720/mallorca-villa-alegria-mallorca-2026-025.jpg',
     ],
@@ -94,15 +94,14 @@ const HOTELS_DATA: Record<string, {
       'Set across five historic canal houses on the Herengracht, The Hoxton brings classic Dutch architecture into dialogue with modern, design-forward room layouts and curated local art.',
     price: 215,
     images: [
+      'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9SWXXNsxzmlKzs5LUAWq0ReZ5ZKGZcyoaEQvWgwwRoz41oAkaz1DNScTKPVSt3Z9MAEkab5O7HxrU0jBEjZn3envk5r0ifdTglEoehJf9A-Syi9uCjoOJYEtmJu4oHcoeSrUZktEg=s680-w680-h510-rw',
       'https://thehoxton.com/wp-content/uploads/sites/5/2020/05/Amsterdam_Hero.jpg',
-      'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TcmMQ8mgIob-yujUh6oZbdotb91bYkr5iB58ALdtAMpQCPjpQBtzGy46oF36elW6-z52nurdk4-ZeIZV5kTxpwftnAaZkBzX1rCbi6Lus24OEX3ii2eU74V0y2yICu4XHl1p4=s680-w680-h510-rw',
-      'https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TMqCZj0zC9mES8ybt5IAQ-Rjg2iKpbfKK5iBxGDTnYe8UJjob8YQidP63jnzmP6RMwVYMLYaTxosnaI0AJfF4TTJ8PyfSv263ikJmpUg68oY5FLkeu3E08ZA8fRNpzd7IxR_c_=s680-w680-h510-rw',
     ],
     amenities: [
       { name: 'Complimentary Breakfast', icon: Coffee },
       { name: 'High-Speed Wi-Fi', icon: Wifi },
       { name: 'Air Conditioning', icon: Wind },
-      { name: 'Smart TV', icon: Tv },
+      { name: 'Restaurant On-Site', icon: Tv },
     ],
     rooms: [
       {
@@ -127,14 +126,14 @@ const HOTELS_DATA: Record<string, {
       'Perched high in the Dolomites, Forestis combines clear mountain air, pure spring water, and minimalist wood-and-stone architecture to create an unmatched alpine sanctuary for deep relaxation.',
     price: 340,
     images: [
+      'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/29/8c/6b/forestis.jpg?w=900&h=500&s=1',
       'https://boutiquehotels.org/wp-content/uploads/7ac2fd8a-5eb3-4b10-8a63-663e6e4934eb-1.webp',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD8mBu5dFw8y2RtMqhxKnZc55PsqwGyrcThkmGeT_1f4sMyzoWkbIzYvo&s=10',
     ],
     amenities: [
       { name: 'Complimentary Breakfast', icon: Coffee },
       { name: 'High-Speed Wi-Fi', icon: Wifi },
       { name: 'Luxury Spa & Wellness', icon: Sparkles },
-      { name: 'Indoor & Outdoor Pool', icon: Waves },
+      { name: 'Mountain Views', icon: Waves },
     ],
     rooms: [
       {
@@ -148,6 +147,180 @@ const HOTELS_DATA: Record<string, {
         image: 'https://media.cntraveler.com/photos/69fb03505661b487f1aacdb5/16:9/w_2560%2Cc_limit/Rooftop-Forestis%2C-Bressanone-Triple-Crown-May2026-PR-Global-1.jpg',
       },
     ],
+  },
+  'villa-azur': {
+    name: 'Villa Azur',
+    location: 'Nice, France',
+    badge: 'Riviera luxury',
+    rating: '4.7',
+    reviewsCount: 82,
+    description: 'Stunning Riviera property featuring open-air terraces, private pool, and direct access to the Mediterranean coastline.',
+    price: 295,
+    images: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmabu_1ZPIolwSRUFEjh9RdqIU-m5GJA1o8RWMBtxm0dncTbwgHQpIa1I&s=10',
+    ],
+    amenities: [
+      { name: 'Private Swimming Pool', icon: Waves },
+      { name: 'Beach Nearby', icon: Sparkles },
+      { name: 'Free Parking', icon: Wifi },
+    ],
+    rooms: [
+      {
+        id: 'azur-suite',
+        title: 'Riviera Suite',
+        bed: '1 King Bed',
+        capacity: '2 Guests',
+        size: '48 m²',
+        price: 295,
+        features: ['Sea breeze terrace', 'Marble bathroom'],
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmabu_1ZPIolwSRUFEjh9RdqIU-m5GJA1o8RWMBtxm0dncTbwgHQpIa1I&s=10',
+      }
+    ]
+  },
+  'kyoto-ryokan': {
+    name: 'Kyoto Hanasu',
+    location: 'Kyoto, Japan',
+    badge: 'Traditional serenity',
+    rating: '4.9',
+    reviewsCount: 140,
+    description: 'Immerse yourself in authentic Japanese hospitality with tatami rooms, soothing hot spring baths, and kaiseki dining.',
+    price: 245,
+    images: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTDTC6Y7BHJ94vQmIDiMO9TIMLcJfN7VP7Q4KWqx6BWPkFi9kwSgzrN8A&s=10',
+    ],
+    amenities: [
+      { name: 'Breakfast Included', icon: Coffee },
+      { name: 'Spa & Wellness', icon: Sparkles },
+      { name: 'Restaurant On-Site', icon: Tv },
+    ],
+    rooms: [
+      {
+        id: 'tatami-room',
+        title: 'Traditional Tatami Suite',
+        bed: 'Futon Beds',
+        capacity: '2 Guests',
+        size: '40 m²',
+        price: 245,
+        features: ['Garden view', 'Private Onsen access'],
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTDTC6Y7BHJ94vQmIDiMO9TIMLcJfN7VP7Q4KWqx6BWPkFi9kwSgzrN8A&s=10',
+      }
+    ]
+  },
+  'nordic-haven': {
+    name: 'Nordic Light Hotel',
+    location: 'Stockholm, Sweden',
+    badge: 'Minimalist design',
+    rating: '4.5',
+    reviewsCount: 76,
+    description: 'Sleek Scandinavian design centered around natural light, minimalist aesthetics, and central Stockholm convenience.',
+    price: 175,
+    images: [
+      'https://cdn.prod.website-files.com/649dd95ac16380b41dca4834/66cdd6c51a158aa42339158b_The%20haven%20islands%20Best%20Airbnb%20maison%20ours%20Treehouse%20Cabane%20dans%20les%20arbres%20Anthony%20VERLAINE%2026.jpg',
+    ],
+    amenities: [
+      { name: 'High-Speed Wi-Fi', icon: Wifi },
+      { name: 'Restaurant', icon: Coffee },
+      { name: 'Free Parking', icon: Wind },
+    ],
+    rooms: [
+      {
+        id: 'nordic-double',
+        title: 'Nordic Minimalist Double',
+        bed: '1 Queen Bed',
+        capacity: '2 Guests',
+        size: '30 m²',
+        price: 175,
+        features: ['Forest view', 'Rainfall shower'],
+        image: 'https://cdn.prod.website-files.com/649dd95ac16380b41dca4834/66cdd6c51a158aa42339158b_The%20haven%20islands%20Best%20Airbnb%20maison%20ours%20Treehouse%20Cabane%20dans%20les%20arbres%20Anthony%20VERLAINE%2026.jpg',
+      }
+    ]
+  },
+  'oasis-tulum': {
+    name: 'Oasis Tulum',
+    location: 'Tulum, Mexico',
+    badge: 'Tropical escape',
+    rating: '4.6',
+    reviewsCount: 110,
+    description: 'Steps away from Caribbean turquoise waters, offering boho-chic cabanas, beachfront dining, and lush jungle vibes.',
+    price: 165,
+    images: [
+      'https://www.oasistulumresort.com/images/gallery/gallery-3.jpg',
+    ],
+    amenities: [
+      { name: 'Beach Nearby', icon: Waves },
+      { name: 'Swimming Pool', icon: Sparkles },
+      { name: 'Breakfast Included', icon: Coffee },
+    ],
+    rooms: [
+      {
+        id: 'tulum-bungalow',
+        title: 'Jungle Beach Bungalow',
+        bed: '1 King Bed',
+        capacity: '2 Guests',
+        size: '45 m²',
+        price: 165,
+        features: ['Hammock terrace', 'Outdoor shower'],
+        image: 'https://www.oasistulumresort.com/images/gallery/gallery-3.jpg',
+      }
+    ]
+  },
+  'alpine-lodge': {
+    name: 'Zermatt Peak Lodge',
+    location: 'Zermatt, Switzerland',
+    badge: 'Alpine classic',
+    rating: '5.0',
+    reviewsCount: 64,
+    description: 'Luxurious chalet overlooking the Matterhorn with private wellness facilities, gourmet dining, and ski-in/ski-out access.',
+    price: 450,
+    images: [
+      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/63917895.jpg?k=c2bf510cc721db6cee0641427afce37dc48e7c4bd1baabfcea4f8be62ca5195f&o=',
+    ],
+    amenities: [
+      { name: 'Mountain Views', icon: Waves },
+      { name: 'Spa & Wellness', icon: Sparkles },
+      { name: 'Gourmet Restaurant', icon: Coffee },
+    ],
+    rooms: [
+      {
+        id: 'matterhorn-suite',
+        title: 'Matterhorn Master Suite',
+        bed: '1 King Bed',
+        capacity: '2 Guests',
+        size: '70 m²',
+        price: 450,
+        features: ['Fireplace', 'Private jacuzzi', 'Matterhorn view'],
+        image: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/63917895.jpg?k=c2bf510cc721db6cee0641427afce37dc48e7c4bd1baabfcea4f8be62ca5195f&o=',
+      }
+    ]
+  },
+  'soho-urban': {
+    name: 'The Soho Loft',
+    location: 'London, UK',
+    badge: 'Trendy hotspot',
+    rating: '4.4',
+    reviewsCount: 55,
+    description: 'Industrial-chic loft apartments in the heart of London featuring exposed brick, high ceilings, and vibrant local nightlife.',
+    price: 140,
+    images: [
+      'https://thumbs.6sqft.com/wp-content/uploads/2021/12/16122119/421_West_Broadway_Apt_2N_New_York_10012__2_.jpg?w=1560&format=webp',
+    ],
+    amenities: [
+      { name: 'High-Speed Wi-Fi', icon: Wifi },
+      { name: 'Restaurant', icon: Coffee },
+      { name: 'Free Parking', icon: Wind },
+    ],
+    rooms: [
+      {
+        id: 'soho-studio',
+        title: 'Soho Urban Studio',
+        bed: '1 Queen Bed',
+        capacity: '2 Guests',
+        size: '32 m²',
+        price: 140,
+        features: ['City views', 'Kitchenette'],
+        image: 'https://thumbs.6sqft.com/wp-content/uploads/2021/12/16122119/421_West_Broadway_Apt_2N_New_York_10012__2_.jpg?w=1560&format=webp',
+      }
+    ]
   },
 };
 
