@@ -30,7 +30,7 @@ const HOTELS = [
     rating: 4.8,
     stars: 4,
     roomTypes: ['single', 'double'],
-    tags: ['Canal views', 'Restaurant', 'Design-led rooms'],
+    tags: ['Restaurant'],
     price: 215,
     recommendedRank: 2,
     image:
@@ -44,11 +44,95 @@ const HOTELS = [
     rating: 4.9,
     stars: 5,
     roomTypes: ['suite'],
-    tags: ['Mountain views', 'Spa', 'Adults-only'],
+    tags: ['Mountain views', 'Spa & wellness'],
     price: 340,
     recommendedRank: 3,
     image:
       'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/29/8c/6b/forestis.jpg?w=900&h=500&s=1',
+  },
+  {
+    id: 'villa-azur',
+    name: 'Villa Azur',
+    location: 'NICE, FRANCE',
+    badge: 'Riviera luxury',
+    rating: 4.7,
+    stars: 5,
+    roomTypes: ['double', 'suite'],
+    tags: ['Pool', 'Beach nearby', 'Free parking'],
+    price: 295,
+    recommendedRank: 4,
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmabu_1ZPIolwSRUFEjh9RdqIU-m5GJA1o8RWMBtxm0dncTbwgHQpIa1I&s=10',
+  },
+  {
+    id: 'kyoto-ryokan',
+    name: 'Kyoto Hanasu',
+    location: 'KYOTO, JAPAN',
+    badge: 'Traditional serenity',
+    rating: 4.9,
+    stars: 4,
+    roomTypes: ['single', 'double'],
+    tags: ['Breakfast included', 'Spa & wellness', 'Restaurant'],
+    price: 245,
+    recommendedRank: 5,
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTDTC6Y7BHJ94vQmIDiMO9TIMLcJfN7VP7Q4KWqx6BWPkFi9kwSgzrN8A&s=10',
+  },
+  {
+    id: 'nordic-haven',
+    name: 'Nordic Light Hotel',
+    location: 'STOCKHOLM, SWEDEN',
+    badge: 'Minimalist design',
+    rating: 4.5,
+    stars: 4,
+    roomTypes: ['single', 'double'],
+    tags: ['Restaurant', 'Free parking'],
+    price: 175,
+    recommendedRank: 6,
+    image:
+      'https://cdn.prod.website-files.com/649dd95ac16380b41dca4834/66cdd6c51a158aa42339158b_The%20haven%20islands%20Best%20Airbnb%20maison%20ours%20Treehouse%20Cabane%20dans%20les%20arbres%20Anthony%20VERLAINE%2026.jpg',
+  },
+  {
+    id: 'oasis-tulum',
+    name: 'Oasis Tulum',
+    location: 'TULUM, MEXICO',
+    badge: 'Tropical escape',
+    rating: 3.6,
+    stars: 4,
+    roomTypes: ['double', 'suite'],
+    tags: ['Pool', 'Beach nearby', 'Breakfast included'],
+    price: 165,
+    recommendedRank: 7,
+    image:
+      'https://www.oasistulumresort.com/images/gallery/gallery-3.jpg',
+  },
+  {
+    id: 'alpine-lodge',
+    name: 'Zermatt Peak Lodge',
+    location: 'ZERMATT, SWITZERLAND',
+    badge: 'Alpine classic',
+    rating: 5.0,
+    stars: 5,
+    roomTypes: ['suite'],
+    tags: ['Mountain views', 'Spa & wellness', 'Restaurant'],
+    price: 450,
+    recommendedRank: 8,
+    image:
+      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/63917895.jpg?k=c2bf510cc721db6cee0641427afce37dc48e7c4bd1baabfcea4f8be62ca5195f&o=',
+  },
+  {
+    id: 'soho-urban',
+    name: 'The Soho Loft',
+    location: 'LONDON, UK',
+    badge: 'Trendy hotspot',
+    rating: 2.4,
+    stars: 3,
+    roomTypes: ['single', 'double'],
+    tags: ['Restaurant', 'Free parking'],
+    price: 140,
+    recommendedRank: 9,
+    image:
+      'https://thumbs.6sqft.com/wp-content/uploads/2021/12/16122119/421_West_Broadway_Apt_2N_New_York_10012__2_.jpg?w=1560&format=webp',
   },
 ];
 
@@ -61,7 +145,10 @@ function DirectoryContent() {
   const maxPriceParam = searchParams.get('maxPrice');
   const minStarsParam = searchParams.get('minStars');
   const roomTypeParam = searchParams.get('roomType');
+  const amenitiesParam = searchParams.get('amenities');
   const sortParam = searchParams.get('sort') || 'recommended';
+
+  const selectedAmenities = amenitiesParam ? amenitiesParam.split(',').map((a) => a.trim().toLowerCase()) : [];
 
   // 2. Filter hotels against all active criteria
   const filteredHotels = HOTELS.filter((hotel) => {
@@ -84,7 +171,7 @@ function DirectoryContent() {
       return false;
     }
 
-    // Min Stars
+    // Min Stars (Slider support)
     if (minStarsParam && hotel.stars < Number(minStarsParam)) {
       return false;
     }
@@ -92,6 +179,15 @@ function DirectoryContent() {
     // Room Type
     if (roomTypeParam && !hotel.roomTypes.includes(roomTypeParam)) {
       return false;
+    }
+
+    // Amenities Check
+    if (selectedAmenities.length > 0) {
+      const hotelTagsLower = hotel.tags.map((t) => t.toLowerCase());
+      const matchesAll = selectedAmenities.every((selected) =>
+        hotelTagsLower.some((tag) => tag.includes(selected))
+      );
+      if (!matchesAll) return false;
     }
 
     return true;
@@ -118,12 +214,10 @@ function DirectoryContent() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left Sidebar Filter Panel */}
         <div className="lg:col-span-3 sticky top-8">
           <FilterPanel />
         </div>
 
-        {/* Right Hotel Results Column */}
         <div className="lg:col-span-9 space-y-8">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-muted">

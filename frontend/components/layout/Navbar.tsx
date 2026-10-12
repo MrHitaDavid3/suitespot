@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { User } from 'lucide-react';
 
 export default function Navbar() {
@@ -6,8 +7,14 @@ export default function Navbar() {
     <header className="w-full bg-ink text-white py-3 sm:py-4 px-4 sm:px-6 lg:px-16 flex items-center justify-between gap-3">
       {/* Logo & Brand */}
       <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
-        <div className="bg-accent text-white font-black px-2.5 py-1.5 rounded text-sm">
-          S
+        <div className="relative w-9 h-10 shrink-0">
+          <Image
+            src="/logo.png"
+            alt="SuiteSpot Logo Icon"
+            fill
+            className="object-contain"
+            priority
+          />
         </div>
         <div className="flex flex-col">
           <span className="font-black text-base sm:text-lg tracking-tight leading-none">
