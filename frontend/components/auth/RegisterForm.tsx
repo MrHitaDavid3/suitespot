@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 // Task 5.1.1 - registration form. Backend: POST /register (task 5.1.2, David).
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+).replace(/\/+$/, "");
 
 type Fields = { email: string; password: string; confirmPassword: string };
 type Errors = Partial<Record<keyof Fields | "form", string>>;

@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+).replace(/\/+$/, "");
+
 interface HealthData {
   status: string;
   database: string;
@@ -14,7 +18,7 @@ export default function HealthPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/health")
+    fetch(`${API_URL}/health`)
       .then((res) => res.json())
       .then((data) => {
         setHealth(data);
