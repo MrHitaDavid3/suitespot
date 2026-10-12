@@ -19,10 +19,11 @@ def test_cors_origins_from_env(monkeypatch):
         for origin in (
             "http://localhost:3000",
             "https://suitespot.vercel.app",
-            "https://suitespot-git-some-branch-team.vercel.app",
+            "https://suitespot-git-some-branch-buyans-projects-56ef48dc.vercel.app",
         ):
             assert allowed_origin(client, origin) == origin
         assert allowed_origin(client, "https://evil.example") is None
+        assert allowed_origin(client, "https://suitespot-evil.vercel.app") is None
     finally:
         monkeypatch.undo()
         importlib.reload(main)
