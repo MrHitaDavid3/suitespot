@@ -44,7 +44,7 @@ const HOTELS = [
     rating: 4.9,
     stars: 5,
     roomTypes: ['suite'],
-    tags: ['Mountain views', 'Spa', 'Adults-only'],
+    tags: ['Mountain views', 'Spa & wellness', 'Adults-only'],
     price: 340,
     recommendedRank: 3,
     image:
@@ -61,7 +61,10 @@ function DirectoryContent() {
   const maxPriceParam = searchParams.get('maxPrice');
   const minStarsParam = searchParams.get('minStars');
   const roomTypeParam = searchParams.get('roomType');
+  const amenitiesParam = searchParams.get('amenities');
   const sortParam = searchParams.get('sort') || 'recommended';
+
+  const selectedAmenities = amenitiesParam ? amenitiesParam.split(',').map((a) => a.trim().toLowerCase()) : [];
 
   // 2. Filter hotels against all active criteria
   const filteredHotels = HOTELS.filter((hotel) => {
@@ -84,7 +87,7 @@ function DirectoryContent() {
       return false;
     }
 
-    // Min Stars
+    // Min Stars (Slider support)
     if (minStarsParam && hotel.stars < Number(minStarsParam)) {
       return false;
     }
@@ -92,6 +95,15 @@ function DirectoryContent() {
     // Room Type
     if (roomTypeParam && !hotel.roomTypes.includes(roomTypeParam)) {
       return false;
+    }
+
+    // Amenities Check
+    if (selectedAmenities.length > 0) {
+      const hotelTagsLower = hotel.tags.map((t) => t.toLowerCase());
+      const matchesAll = selectedAmenities.every((selected) =>
+        hotelTagsLower.some((tag) => tag.includes(selected))
+      );
+      if (!matchesAll) return false;
     }
 
     return true;
@@ -118,12 +130,10 @@ function DirectoryContent() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left Sidebar Filter Panel */}
         <div className="lg:col-span-3 sticky top-8">
           <FilterPanel />
         </div>
 
-        {/* Right Hotel Results Column */}
         <div className="lg:col-span-9 space-y-8">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-muted">

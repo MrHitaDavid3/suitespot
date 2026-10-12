@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { 
   Star, 
   MapPin, 
@@ -153,10 +153,51 @@ const HOTELS_DATA: Record<string, {
 
 export default function HotelDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const hotelId = (params?.id as string) || 'casa-sol';
   
   const hotel = HOTELS_DATA[hotelId] || HOTELS_DATA['casa-sol'];
-  const [selectedRoom, setSelectedRoom] = useState(hotel.rooms[0]?.id);
+  const [selectedRoomId, setSelectedRoomId] = useState(hotel.rooms[0]?.id);
+
+  // Get today's date in YYYY-MM-DD format as the strict minimum boundary
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  // Default check-in to today or later, check-out to tomorrow or later
+  const tomorrowObj = new Date();
+  tomorrowObj.setDate(tomorrowObj.getDate() + 3);
+  const defaultCheckOutStr = tomorrowObj.toISOString().split('T')[0];
+
+  const paramCheckIn = searchParams.get('checkIn');
+  const paramCheckOut = searchParams.get('checkOut');
+
+  const [checkIn, setCheckIn] = useState(paramCheckIn && paramCheckIn >= todayStr ? paramCheckIn : todayStr);
+  const [checkOut, setCheckOut] = useState(paramCheckOut && paramCheckOut > checkIn ? paramCheckOut : defaultCheckOutStr);
+
+  const currentRoom = hotel.rooms.find((r) => r.id === selectedRoomId) || hotel.rooms[0];
+
+  // Handle Check-in change and automatically push check-out forward if needed
+  const handleCheckInChange = (newCheckIn: string) => {
+    setCheckIn(newCheckIn);
+    if (newCheckIn >= checkOut) {
+      const nextDay = new Date(newCheckIn);
+      nextDay.setDate(nextDay.getDate() + 1);
+      setCheckOut(nextDay.toISOString().split('T')[0]);
+    }
+  };
+
+  // Calculate nights dynamically
+  const calculateNights = (start: string, end: string) => {
+    const d1 = new Date(start);
+    const d2 = new Date(end);
+    const diffTime = d2.getTime() - d1.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 1;
+  };
+
+  const nights = calculateNights(checkIn, checkOut);
+  const roomTotal = currentRoom.price * nights;
+  const taxes = 45;
+  const grandTotal = roomTotal + taxes;
 
   return (
     <div className="bg-canvas min-h-screen text-ink pb-24">
@@ -221,10 +262,10 @@ export default function HotelDetailPage() {
                     src={img} 
                     alt={`${hotel.name} detail ${idx + 1}`}
                     className="w-full h-full object-cover"
-                 />
-               </div>
-              ))}
-         </div>
+               />
+             </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -264,11 +305,11 @@ export default function HotelDetailPage() {
             
             <div className="space-y-6">
               {hotel.rooms.map((room) => {
-                const isSelected = selectedRoom === room.id;
+                const isSelected = selectedRoomId === room.id;
                 return (
                   <div 
                     key={room.id}
-                    onClick={() => setSelectedRoom(room.id)}
+                    onClick={() => setSelectedRoomId(room.id)}
                     className={`p-4 sm:p-6 rounded-card border transition-all cursor-pointer ${
                       isSelected 
                         ? 'border-ink bg-surface shadow-md' 
@@ -326,42 +367,61 @@ export default function HotelDetailPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 rounded-control border border-line bg-canvas flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-ink shrink-0" />
-                  <div>
-                    <span className="block text-[10px] font-bold tracking-wider text-muted uppercase">DATES</span>
-                    <span className="text-sm font-semibold text-ink">21 Nov 2026 – 24 Nov 2026</span>
-                  </div>
+              {/* Interactive Date Pickers with Strict Future Restriction */}
+              <div className="grid grid-cols-2 gap-3 p-4 rounded-control border border-line bg-canvas">
+                <div>
+                  <label className="block text-[10px] font-bold tracking-wider text-muted uppercase mb-1">CHECK-IN</label>
+                  <input
+                    type="date"
+                    min={todayStr}
+                    value={checkIn}
+                    onChange={(e) => handleCheckInChange(e.target.value)}
+                    className="w-full bg-transparent text-xs font-bold text-ink focus:outline-none cursor-pointer"
+                  />
                 </div>
-                <span className="text-xs font-bold text-accent whitespace-nowrap">3 nights</span>
+                <div className="border-l border-line pl-3">
+                  <label className="block text-[10px] font-bold tracking-wider text-muted uppercase mb-1">CHECK-OUT</label>
+                  <input
+                    type="date"
+                    min={checkIn}
+                    value={checkOut}
+                    onChange={(e) => setCheckOut(e.target.value)}
+                    className="w-full bg-transparent text-xs font-bold text-ink focus:outline-none cursor-pointer"
+                  />
+                </div>
               </div>
 
-              <div className="p-4 rounded-control border border-line bg-canvas flex items-center gap-3">
-                <Users className="w-5 h-5 text-ink shrink-0" />
-                <div>
-                  <span className="block text-[10px] font-bold tracking-wider text-muted uppercase">GUESTS</span>
-                  <span className="text-sm font-semibold text-ink">2 Adults · 1 Room</span>
+              <div className="p-4 rounded-control border border-line bg-canvas flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Users className="w-5 h-5 text-ink shrink-0" />
+                  <div>
+                    <span className="block text-[10px] font-bold tracking-wider text-muted uppercase">SELECTED ROOM</span>
+                    <span className="text-sm font-semibold text-ink truncate block max-w-[200px]">{currentRoom.title}</span>
+                  </div>
                 </div>
+                <span className="text-xs font-bold text-accent whitespace-nowrap">{nights} {nights === 1 ? 'night' : 'nights'}</span>
               </div>
             </div>
 
             <div className="border-t border-line/60 pt-4 space-y-3 text-sm font-medium">
               <div className="flex justify-between text-muted">
-                <span>${hotel.price} x 3 nights</span>
-                <span className="text-ink font-bold">${hotel.price * 3}</span>
+                <span>${currentRoom.price} × {nights} {nights === 1 ? 'night' : 'nights'}</span>
+                <span className="text-ink font-bold">${roomTotal}</span>
               </div>
               <div className="flex justify-between text-muted">
                 <span>Taxes & fees</span>
-                <span className="text-ink font-bold">$45</span>
+                <span className="text-ink font-bold">${taxes}</span>
               </div>
               <div className="border-t border-line/60 pt-3 flex justify-between text-lg font-black text-ink">
                 <span>Total</span>
-                <span>${hotel.price * 3 + 45}</span>
+                <span>${grandTotal}</span>
               </div>
             </div>
 
-            <button className="w-full bg-accent hover:bg-accent-hover text-white py-4 rounded-control font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md">
+            <button 
+              onClick={() => alert(`Successfully reserved ${currentRoom.title} from ${checkIn} to ${checkOut} (${nights} nights, $${grandTotal} total)!`)}
+              className="w-full bg-accent hover:bg-accent-hover text-white py-4 rounded-control font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+            >
               Complete Reservation <ArrowUpRight className="w-5 h-5" />
             </button>
 
@@ -373,10 +433,10 @@ export default function HotelDetailPage() {
 
       </section>
 
-      {/* Mobile: price + reserve shortcut (6.3.2). The booking widget sits below the rooms on small screens. */}
+      {/* Mobile Sticky Bar */}
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur px-4 py-3 flex items-center justify-between gap-4">
         <div>
-          <span className="text-xl font-black text-ink">${hotel.price}</span>
+          <span className="text-xl font-black text-ink">${currentRoom.price}</span>
           <span className="text-xs font-medium text-muted"> / night</span>
         </div>
         <a
