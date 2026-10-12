@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas.search import HotelSearchParams
-from app.services.availability import find_available_hotels
+from app.services.availability import SortOption, find_available_hotels
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -18,6 +18,7 @@ class SearchQuery(HotelSearchParams):
     the paging fields live on a subclass instead of editing the shared schema.
     """
 
+    sort: SortOption = "recommended"  # 1.5.1: recommended | price_asc | price_desc | rating
     limit: int = Field(default=20, ge=1, le=50)
     offset: int = Field(default=0, ge=0)
 
@@ -39,7 +40,8 @@ def search_hotels(
         check_in=params.check_in,
         check_out=params.check_out,
         guests=params.guests,
+        sort=params.sort,
         limit=params.limit,
         offset=params.offset,
     )
-    return {"results": results, "limit": params.limit, "offset": params.offset}
+    return {"results": results, "sort": params.sort, "limit": params.limit, "offset": params.offset,}
