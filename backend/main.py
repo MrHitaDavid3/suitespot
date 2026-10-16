@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.images import router as images
 from app.images.resize import SIZED_DIR
-from app.routers import auth_tokens, health, logout, register, search
+from app.routers import auth_tokens, cancel, health, logout, register, search
 
 app = FastAPI(title="SuiteSpot API", version="0.1.0")
 
@@ -36,6 +36,7 @@ app.include_router(search.router)
 app.include_router(auth_tokens.router)
 app.include_router(register.router)
 app.include_router(logout.router)
+app.include_router(cancel.router)
 app.include_router(images.router)
 
 # Resized hotel photos (1.3.1), built by `python -m app.images` or the seed.
