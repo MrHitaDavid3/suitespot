@@ -70,6 +70,10 @@ def find_available_hotels(
     sort: SortOption = "recommended",
     limit: int = 20,
     offset: int = 0,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    min_stars: int | None = None,
+    room_type: str | None = None,
 ) -> list[dict]:
     """Hotels with at least one free room that fits the party for the dates."""
     destination = destination.strip()
@@ -101,5 +105,13 @@ def find_available_hotels(
         .limit(limit)
         .offset(offset)
     )
+    if min_price is not None:
+        stmt = stmt.where(Room.price_per_night >= min_price)
+    if max_price is not None:
+        stmt = stmt.where(Room.price_per_night <= max_price)
+    if min_stars is not None:
+        stmt = stmt.where(Hotel.star_rating >= min_stars)
+    if room_type is not None:
+        stmt = stmt.where(Room.room_type == room_type)
     rows = db.execute(stmt).mappings().all()
     return [{**row, "from_price": float(row["from_price"])} for row in rows]

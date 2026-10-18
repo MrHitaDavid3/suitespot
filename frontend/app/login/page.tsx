@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { saveTokens } from "@/lib/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
@@ -39,11 +42,20 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Connect to Vincent's POST /login endpoint
-      console.log("Submitting login for:", email);
-      
-      // Simulate network request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const api = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+      const response = await fetch(`${api}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        setGeneralError(response.status === 401 ? "Invalid email or password." : "Unable to sign in. Please try again.");
+        return;
+      }
+      saveTokens(await response.json());
+      window.dispatchEvent(new Event("suitespot-auth-change"));
+      const next = new URLSearchParams(window.location.search).get("next");
+      router.replace(next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") ? next : "/hotels");
     } catch (err) {
       setGeneralError("Invalid email or password. Please try again.");
     } finally {

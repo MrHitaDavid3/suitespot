@@ -43,5 +43,9 @@ def search_hotels(
         sort=params.sort,
         limit=params.limit,
         offset=params.offset,
+        min_price=params.min_price,
+        max_price=params.max_price,
+        min_stars=params.min_stars,
+        room_type=params.room_type,
     )
     return {"results": results, "sort": params.sort, "limit": params.limit, "offset": params.offset,}
